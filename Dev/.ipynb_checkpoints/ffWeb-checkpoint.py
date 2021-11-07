@@ -1,6 +1,6 @@
 # imports
 from flask import Flask, request, render_template
-from ffanalytics import ffApiPull, ffTotalPoints, ffTopWeeks, ffBotWeeks, ffTopSzns
+from ffAnalytics import ffApiPull, ffTotalPoints, ffTopWeeks, ffBotWeeks, ffTopSzns
 import pandas as pd
 
 

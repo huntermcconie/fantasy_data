@@ -10,10 +10,11 @@ outFf = ffApiPull(2016015,2018,2021,1,17)
 # create dictionary of the ff data as html tables for display
 outDict = [
     ffTotalPoints(outFf),
+    ffTopSzns(outFf),
     ffTopWeeks(outFf),
-    ffBotWeeks(outFf),
-    ffTopSzns(outFf)
+    ffBotWeeks(outFf)
 ]
     
 for obj in outDict:
     print(obj)
+    print("Next Table")

@@ -87,13 +87,30 @@ def ffApiPull (leagueId, yearBeg, yearEnd, weekBeg, weekEnd):
 
 # function for totalPoints by team
 def ffTotalPoints (df):
-    return df.groupby(['Name'],as_index=False).agg({'Points':'sum','winFlg':'sum'}).sort_values(by=['Points'], ascending=False).rename(columns={"winFlg": "Wins"})
+    df = df.groupby(['Name'],as_index=False).agg({'Points':'sum','winFlg':['sum','count']}).reset_index(drop=True)
+    
+    df.columns = df.columns.get_level_values(0)
+    df.columns = ['Name','Points','Wins','Losses']
+    
+    df['Losses'] = df['Losses'] - df['Wins']
+    df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
+    df['WinPct'] = df['Wins'] / (df['Wins'] + df['Losses'])    
 
+    return df.sort_values(by=['Points'], ascending=False)
 
 # function for printing totalPoints by team
 def ffTopSzns (df):
-    df = df.groupby(['Name','Season']).agg({'Points':'sum','winFlg':'sum'}).reset_index().sort_values(by=['Points'], ascending=False).rename(columns={"winFlg": "Wins"})
-    return df[['Name','Points','Season','Wins']].nlargest(10,'Points')
+    df = df.groupby(['Name','Season'],as_index=False).agg({'Points':'sum','winFlg':['sum','count']}).reset_index(drop=True)
+    
+    df.columns = ['Name','Season','Points','Wins','Losses']
+    
+    df['Losses'] = df['Losses'] - df['Wins']
+    df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
+    df['WinPct'] = df['Wins'] / (df['Wins'] + df['Losses'])    
+    
+    df = df[['Name','Points','Season','Wins','Losses','Average','WinPct']]#.nlargest(10,'Points')
+    
+    return df.nlargest(10,'Points').sort_values(by=['Points'], ascending=False)
 
 
 # function for top10 week scores
