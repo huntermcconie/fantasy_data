@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html> 
-    <body>
+    <head>
+        <img src="{{url_for('static', filename='espnlogo.jpg')}}">
         <h1>ESPN Fantasy Football Analytics</h1>
         <a href="/form">
             <button>Get Started</button>
          </a>
+    </head>
+    <body>
+        <br>
+        <br>
+        <h2>Login to your ESPN fantasy account and navigate to your league. Pull the league ID from the URL:</h2>
+        <img src="{{url_for('static', filename='espnurl.jpg')}}" alt="ESPN League ID in URL">
     </body>
 </html>

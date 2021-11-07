@@ -1,6 +1,6 @@
 # imports
 from flask import Flask, request, render_template
-from ffAnalytics import ffApiPull, ffTotalPoints, ffTopWeeks, ffBotWeeks, ffTopSzns
+from ffanalytics import ffApiPull, ffTotalPoints, ffTopWeeks, ffBotWeeks, ffTopSzns
 import pandas as pd
 
 
@@ -35,13 +35,13 @@ def my_form_post():
     # create dictionary of the ff data as html tables for display
     outDict = [
         ffTotalPoints(outFf).to_html(classes='data',index=False),
+        ffTopSzns(outFf).to_html(classes='data',index=False),
         ffTopWeeks(outFf).to_html(classes='data',index=False),
-        ffBotWeeks(outFf).to_html(classes='data',index=False),
-        ffTopSzns(outFf).to_html(classes='data',index=False)
+        ffBotWeeks(outFf).to_html(classes='data',index=False)
     ]
     
     # return html tables
-    return render_template('table.html',  tables=outDict, titles=['na','Total Points','Top Weeks','Bottom Weeks','Top Seasons'])
+    return render_template('table.html',  tables=outDict, titles=['na','Total Points','Top Seasons','Top Weeks','Bottom Weeks'])
 
 
 # init

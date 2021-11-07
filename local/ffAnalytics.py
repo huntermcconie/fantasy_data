@@ -7,34 +7,35 @@ def ffDfMatch (yearIn, weekListIn, jsObj):
     
     # Create home and away data and concat into one df from json objects
     dfHome = pd.DataFrame([[
+            game['home']['totalPoints'],   
             yearIn,
             game['matchupPeriodId'],
-            game['winner'],
+            np.where(game['winner']=="HOME",1,np.where(game['winner']=="AWAY",0,'UNDECIDED')),
             1,
-            game['home']['teamId'],
-            game['home']['totalPoints'],       
+            game['home']['teamId'],    
             np.where(game['matchupPeriodId']<14,0,1),
     ] for game in jsObj['schedule'] if game['matchupPeriodId'] in weekListIn]
-    ,columns=['seasonId','matchupPeriodId','winFlg','homeFlg','teamId','totalPoints','playoffFlg'])
+    ,columns=['Points','Season','Week','winFlg','homeFlg','teamId','playoffFlg'])
 
     dfAway = pd.DataFrame([[
+            game['away']['totalPoints'], 
             yearIn,
             game['matchupPeriodId'],
-            game['winner'],
+            np.where(game['winner']=="HOME",0,np.where(game['winner']=="AWAY",1,'UNDECIDED')),
             0,
             game['away']['teamId'],
-            game['away']['totalPoints'],       
             np.where(game['matchupPeriodId']<14,0,1),
     ] for game in jsObj['schedule'] if game['matchupPeriodId'] in weekListIn]
-    ,columns=['seasonId','matchupPeriodId','winFlg','homeFlg','teamId','totalPoints','playoffFlg'])
+    ,columns=['Points','Season','Week','winFlg','homeFlg','teamId','playoffFlg'])
     
+    # merge home and away
     dfMatch = pd.concat([dfHome,dfAway])
 
     # delete match data that has not finished
     dfMatch = dfMatch[dfMatch['winFlg'] != 'UNDECIDED']
-     
-    # update win flag
-    dfMatch['winFlg'] = np.where((dfMatch['winFlg'] == 'HOME') & (dfMatch['homeFlg'] == 1),1,np.where((dfMatch['winFlg'] == 'AWAY') & (dfMatch['homeFlg'] == 0),1,0)) 
+    
+    # convert to int
+    dfMatch['winFlg'] = dfMatch['winFlg'].astype(int)
     
     # return df
     return dfMatch
@@ -77,28 +78,27 @@ def ffApiPull (leagueId, yearBeg, yearEnd, weekBeg, weekEnd):
     
     #create total matches df and merge
     dfMatches = pd.concat(dfMatchGrp)
-    dfOut = pd.merge(dfMatches, dfTeam, how='left',on='teamId')
+    dfOut = pd.merge(dfMatches, dfTeam, how='left',on='teamId').drop(columns=['teamId'])[['Name','Points','Season','Week','winFlg','homeFlg','playoffFlg']]
     
     #return mrg df
-    return dfOut.sort_values(by=['seasonId','teamId','matchupPeriodId'])
+    return dfOut.sort_values(by=['Season','Name','Week'])
 
 
 # function for totalPoints by team
 def ffTotalPoints (df):
-    return pd.DataFrame(df.groupby(df['Name'],as_index=False)['totalPoints'].sum()).sort_values(by=['totalPoints'], ascending=False)
-
+    return df.groupby(['Name']).agg({'Points':'sum','winFlg':'sum'}).sort_values(by=['Points'], ascending=False).rename(columns={"winFlg": "Wins"})
 
 # function for top10 week scores
 def ffTopWeeks (df):
-    return pd.DataFrame(df.nlargest(10,'totalPoints'))
+    return df[['Points','Season','Week','playoffFlg']].nlargest(10,'Points')
     
     
 # function for bot10 week scores
 def ffBotWeeks (df):
-    return pd.DataFrame(df.nsmallest(10,'totalPoints'))
+    return df[['Points','Season','Week','playoffFlg']].nsmallest(10,'Points')
 
 
 # function for printing totalPoints by team
 def ffTopSzns (df):
-    df = pd.DataFrame(df.groupby(['seasonId','Name'])['totalPoints'].sum()).reset_index().sort_values(by=['totalPoints'], ascending=False)
-    return pd.DataFrame(df.nlargest(10,'totalPoints'))
+    df = df.groupby(['Name','Season'])['Points'].sum().reset_index().sort_values(by=['Points'], ascending=False)
+    return df[['Name','Points','Season']].nlargest(10,'Points')
