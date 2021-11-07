@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <body>
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/tables.css')}}">
         <h1>Results</h1>
         {% for table in tables %}
                     {{titles[loop.index]}}
