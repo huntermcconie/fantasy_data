@@ -115,9 +115,11 @@ def ffTopSzns (df):
 
 # function for top10 week scores
 def ffTopWeeks (df):
-    return df[['Name','Points','Season','Week','Type']].nlargest(10,'Points')
+    df['Rank'] = df['Points'].rank(ascending=False).astype(int)
+    return df[['Name','Points','Rank','Season','Week','Type']].nlargest(10,'Points')
     
     
 # function for bot10 week scores
 def ffBotWeeks (df):
-    return df[['Name','Points','Season','Week','Type']].nsmallest(10,'Points')
+    df['Rank'] = df['Points'].rank(ascending=False).astype(int)
+    return df[['Name','Points','Rank','Season','Week','Type']].nsmallest(10,'Points')

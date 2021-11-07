@@ -27,3 +27,10 @@ button1,input[type=submit] {
     font-size: 16px;
     border-radius: 4px;
 }
+
+table {
+    width: 100%;
+    text-align: center;
+    background-color: #ffa07a;
+    color: black;
+}
