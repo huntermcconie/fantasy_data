@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <h1>Results Tables</h1>
+        <h1>Results</h1>
         {% for table in tables %}
                     {{titles[loop.index]}}
                     {{ table|safe }}
@@ -9,9 +9,8 @@
         {% endfor %} 
     </body>
     <footer>
-        <br>
         <a href="/">
-          <button>Return To Home</button>
+          <button>Home</button>
         </a>
     </footer>
 </html>

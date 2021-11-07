@@ -12,6 +12,11 @@ app = Flask(__name__)
 def my_index():
     return render_template('index.html')
 
+# help
+@app.route('/help')
+def my_hekp():
+    return render_template('help.html')
+
 
 # form
 @app.route('/form')

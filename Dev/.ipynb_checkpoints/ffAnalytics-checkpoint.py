@@ -11,7 +11,7 @@ def ffDfMatch (yearIn, weekListIn, jsObj):
             yearIn,
             game['matchupPeriodId'],
             np.where(game['matchupPeriodId']<14,'Regular','Playoff'),
-            np.where(game['winner']=="HOME",1,np.where(game['winner']=="AWAY",0,'UNDECIDED')),
+            np.where(game['winner']=="HOME",1,np.where(game['winner']=="AWAY",0,2)).astype(int),
             1,
             game['home']['teamId'],    
     ] for game in jsObj['schedule'] if game['matchupPeriodId'] in weekListIn]
@@ -22,7 +22,7 @@ def ffDfMatch (yearIn, weekListIn, jsObj):
             yearIn,
             game['matchupPeriodId'],
             np.where(game['matchupPeriodId']<14,'Regular','Playoff'),
-            np.where(game['winner']=="HOME",0,np.where(game['winner']=="AWAY",1,'UNDECIDED')),
+            np.where(game['winner']=="HOME",0,np.where(game['winner']=="AWAY",1,2)).astype(int),
             0,
             game['away']['teamId'],
     ] for game in jsObj['schedule'] if game['matchupPeriodId'] in weekListIn]
@@ -32,13 +32,22 @@ def ffDfMatch (yearIn, weekListIn, jsObj):
     dfMatch = pd.concat([dfHome,dfAway])
 
     # delete match data that has not finished
-    dfMatch = dfMatch[dfMatch['winFlg'] != 'UNDECIDED']
-    
-    # convert to int
-    dfMatch['winFlg'] = dfMatch['winFlg'].astype(int)
+    dfMatch = dfMatch[dfMatch['winFlg'] != 2]
     
     # return df
     return dfMatch
+
+# function that takes url and returns ff team data df
+def ffDfteam (url):
+    # request and create team json object then create team df
+    teamJS = requests.get(url, params={"view": "mTeam"}).json()
+    
+    dfTeam = pd.DataFrame([[
+        team['id'],
+        str(team['location']) + " " + str(team['nickname'])
+    ] for team in teamJS['teams']], columns=['teamId','Name'])
+    
+    return dfTeam
 
 
 # function for returning combined ff match df based on web inputs
@@ -69,16 +78,8 @@ def ffApiPull (leagueId, yearBeg, yearEnd, weekBeg, weekEnd):
         # call matchDf function to create df and append to array        
         dfMatchGrp.append(ffDfMatch(year, weekList, matchJS))
 
-    # request and create team json object then create team df
-    teamJS = requests.get(urlCur, params={"view": "mTeam"}).json()
-    dfTeam = pd.DataFrame([[
-        team['id'],
-        str(team['location']) + " " + str(team['nickname'])
-    ] for team in teamJS['teams']], columns=['teamId','Name'])
-    
-    #create total matches df and merge
-    dfMatches = pd.concat(dfMatchGrp)
-    dfOut = pd.merge(dfMatches, dfTeam, how='left',on='teamId').drop(columns=['teamId'])[['Name','Points','Season','Week','winFlg','homeFlg','Type']]
+    #create total matches df after merging match data and joining with team data by calling function 
+    dfOut = pd.merge(pd.concat(dfMatchGrp), ffDfteam(urlCur), how='left',on='teamId').drop(columns=['teamId'])[['Name','Points','Season','Week','winFlg','homeFlg','Type']]
     
     #return mrg df
     return dfOut.sort_values(by=['Season','Name','Week'])
