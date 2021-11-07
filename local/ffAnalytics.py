@@ -108,6 +108,8 @@ def ffTopSzns (df):
     df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
     df['WinPct'] = df['Wins'] / (df['Wins'] + df['Losses'])    
     
+    df = df[['Name','Points','Season','Wins','Losses','Average','WinPct']]#.nlargest(10,'Points')
+    
     return df.nlargest(10,'Points').sort_values(by=['Points'], ascending=False)
 
 
