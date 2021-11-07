@@ -1,5 +1,5 @@
 html, body, footer {
-    height: %;
+    height: 90%;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
@@ -16,10 +16,14 @@ h1 {
   color: black;
 }
 
-button {
-    color: white;
-    font-size: 16px;
-    border: none;
-    padding: 15px 32px;
+button1,input[type=submit] {
     background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
 }

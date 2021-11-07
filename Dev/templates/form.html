@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/site.css')}}">
     <head> 
         <h1>Inputs</h1>
-        <form method="POST">
-          <label for="leagueId">ESPN leagueId:</label><br>
-          <input type="text" id="leagueId" name="leagueId" value="2016015"><br><br>
-          <label for="begYear">First Year:</label><br>
-          <input type="number" id="begYear" name="begYear" value="2018"><br><br>
-          <label for="endYear">Last Year:</label><br>
-          <input type="number" id="endYear" name="endYear" value="2021"><br><br>
-          <label for="begWeek">First Week:</label><br>
-          <input type="number" id="begWeek" name="begWeek" value="1"><br><br>
-          <label for="endWeek">Last Week:</label><br>
-          <input type="number" id="endWeek" name="endWeek" value="17"><br><br>
-          <input type="submit" value="Submit">
-        </form> 
+        <div>
+            <form method="POST">
+                <label for="leagueId">ESPN leagueId:</label><br>
+                <input type="text" id="leagueId" name="leagueId" value="2016015"><br><br>
+                <label for="begYear">First Year:</label><br>
+                <input type="number" id="begYear" name="begYear" value="2018"><br><br>
+                <label for="endYear">Last Year:</label><br>
+                <input type="number" id="endYear" name="endYear" value="2021"><br><br>
+                <label for="begWeek">First Week:</label><br>
+                <input type="number" id="begWeek" name="begWeek" value="1"><br><br>
+                <label for="endWeek">Last Week:</label><br>
+                <input type="number" id="endWeek" name="endWeek" value="17"><br><br>
+                <input type="submit" value="Submit"> <br><br>
+                <input type="reset" value="Reset">
+            </form> 
+        </div>
     </head>
     <body>
         <br><br>

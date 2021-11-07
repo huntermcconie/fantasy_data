@@ -1,5 +1,5 @@
 html, body, footer {
-    height: %;
+    height: 90%;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
@@ -16,7 +16,7 @@ h1 {
   color: black;
 }
 
-button {
+input[type=submit] {
     color: white;
     font-size: 16px;
     border: none;
