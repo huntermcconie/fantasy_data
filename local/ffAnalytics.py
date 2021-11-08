@@ -96,7 +96,9 @@ def ffTotalPoints (df):
     df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
     df['WinPct'] = df['Wins'] / (df['Wins'] + df['Losses'])    
 
-    return df.sort_values(by=['Points'], ascending=False)
+    formatDict = {'WinPct':3,'Points':2,'Average':2}
+    
+    return df.round(formatDict).sort_values(by=['Points'], ascending=False)
 
 # function for printing totalPoints by team
 def ffTopSzns (df):
@@ -106,18 +108,22 @@ def ffTopSzns (df):
     
     df['Losses'] = df['Losses'] - df['Wins']
     df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
-    df['WinPct'] = df['Wins'] / (df['Wins'] + df['Losses'])    
+    df['WinPct'] = (df['Wins'] / (df['Wins'] + df['Losses'])) 
+    
+    formatDict = {'WinPct':3,'Points':2,'Average':2}
     
     df = df[['Name','Points','Season','Wins','Losses','Average','WinPct']]#.nlargest(10,'Points')
     
-    return df.nlargest(10,'Points').sort_values(by=['Points'], ascending=False)
+    return df.round(formatDict).nlargest(10,'Points').sort_values(by=['Points'], ascending=False)
 
 
 # function for top10 week scores
 def ffTopWeeks (df):
-    return df[['Name','Points','Season','Week','Type']].nlargest(10,'Points')
+    df['Rank'] = df['Points'].rank(ascending=False).astype(int)
+    return df[['Name','Points','Rank','Season','Week','Type']].nlargest(10,'Points')
     
     
 # function for bot10 week scores
 def ffBotWeeks (df):
-    return df[['Name','Points','Season','Week','Type']].nsmallest(10,'Points')
+    df['Rank'] = df['Points'].rank(ascending=False).astype(int)
+    return df[['Name','Points','Rank','Season','Week','Type']].nsmallest(10,'Points')

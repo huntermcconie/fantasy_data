@@ -109,10 +109,11 @@ def ffTopSzns (df):
     df['Losses'] = df['Losses'] - df['Wins']
     df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
     df['WinPct'] = (df['Wins'] / (df['Wins'] + df['Losses'])) 
+    df['Rank'] = df['Points'].rank(ascending=False).astype(int)
     
     formatDict = {'WinPct':3,'Points':2,'Average':2}
     
-    df = df[['Name','Points','Season','Wins','Losses','Average','WinPct']]#.nlargest(10,'Points')
+    df = df[['Name','Points','Rank','Season','Wins','Losses','Average','WinPct']]#.nlargest(10,'Points')
     
     return df.round(formatDict).nlargest(10,'Points').sort_values(by=['Points'], ascending=False)
 
