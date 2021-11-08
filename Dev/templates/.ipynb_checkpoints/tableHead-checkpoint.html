@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/site.css')}}">
+    <body>
+        <h1>Results</h1> <br>
+        <a href="/">
+            <button>Home</button>
+        </a>
+        <br>   
+            {% for table in tables %}
+                {% for key, value in table.items() %}
+                    <tr>
+                        <td> Key: {{ key }} </td> 
+                        <td> Value: {{ value }} </td>
+                    </tr>
+                {% endfor %} 
+            {% endfor %} 
+        <br>     
+        <a href="/">
+            <button>Home</button>
+        </a> 
+    </body> <br>
+</html>
+
