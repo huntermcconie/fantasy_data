@@ -67,13 +67,13 @@ def ffApiPull (leagueId, yearBeg, yearEnd, weekBeg, weekEnd):
         urlCur = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/2021/segments/0/leagues/" + str(leagueId)
 
         if year == 2021:
-            # create 2021 json object
+            # create 2021 year url and json object
+            #url = "https://fantasy.espn.com/apis/v3/games/ffl/seasons/2021/segments/0/leagues/" + str(leagueId)
             matchJS = requests.get(urlCur, params={"view": "mMatchup"}).json()
-
         else:
             # Create historic year url and json object
-            urlHist = "https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/" + str(leagueId) + "?seasonId=" + str(year)
-            matchJS = requests.get(urlHist, params={"view": "mMatchup"}).json()[0]
+            url = "https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/" + str(leagueId) + "?seasonId=" + str(year)
+            matchJS = requests.get(url, params={"view": "mMatchup"}).json()[0]
 
         # call matchDf function to create df and append to array        
         dfMatchGrp.append(ffDfMatch(year, weekList, matchJS))
@@ -109,13 +109,13 @@ def ffTopSzns (df):
     df['Losses'] = df['Losses'] - df['Wins']
     df['Average'] = df['Points'] / (df['Wins'] + df['Losses'])
     df['WinPct'] = (df['Wins'] / (df['Wins'] + df['Losses'])) 
-    df['Rank'] = df['Points'].rank(ascending=False).astype(int)
+    df['Rank'] = df['Average'].rank(ascending=False).astype(int)
     
     formatDict = {'WinPct':3,'Points':2,'Average':2}
     
     df = df[['Name','Points','Rank','Season','Wins','Losses','Average','WinPct']]#.nlargest(10,'Points')
     
-    return df.round(formatDict).nlargest(10,'Points').sort_values(by=['Points'], ascending=False)
+    return df.round(formatDict).nlargest(10,'Average').sort_values(by=['Average'], ascending=False)
 
 
 # function for top10 week scores

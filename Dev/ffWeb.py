@@ -38,15 +38,15 @@ def my_form_post():
     )
     
     # create dictionary of the ff data as html tables for display
-    outDict = [
-        ffTotalPoints(outFf).to_html(classes='data',index=False),
-        ffTopSzns(outFf).to_html(classes='data',index=False),
-        ffTopWeeks(outFf).to_html(classes='data',index=False),
-        ffBotWeeks(outFf).to_html(classes='data',index=False)
+    outList = [
+        ffTotalPoints(outFf).to_html(classes='points',index=False),
+        ffTopSzns(outFf).to_html(classes='szns',index=False),
+        ffTopWeeks(outFf).to_html(classes='tweeks',index=False),
+        ffBotWeeks(outFf).to_html(classes='bweeks',index=False)
     ]
     
     # return html tables
-    return render_template('table.html',  tables=outDict, titles=['na','Total Points','Top Seasons','Top Weeks','Bottom Weeks'])
+    return render_template('tabletest.html',  tables=outList, titles=['na','Total Points','Top Seasons','Top Weeks','Bottom Weeks'])
 
 
 # init

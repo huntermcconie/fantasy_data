@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="{{ url_for('static',filename='styles/site.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/sitetest.css')}}">
     <body> <br>
-        <a href="/">
-            <button>Home</button>
-        </a>
-        {% for table in tables %}
-                    <h2>{{titles[loop.index]}}</h2>
-                    {{ table|safe }} 
-        {% endfor %} 
-        <br>
-    </body> 
+        <div>
+            <a href="/">
+                <button>Home</button>
+            </a>
+            {% for table in tables %}
+                <h2>{{titles[loop.index]}}</h2>
+                {{table|safe}}
+            {% endfor %} 
+        </div>
+    <br></body> 
 </html>
-
