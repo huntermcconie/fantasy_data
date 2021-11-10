@@ -46,7 +46,7 @@ def my_form_post():
     ]
     
     # return html tables
-    return render_template('table2.html',  tables=outList, titles=['Total Points','Top Seasons','Top Weeks','Bottom Weeks'])
+    return render_template('tabletest.html',  tables=outList, titles=['na','Total Points','Top Seasons','Top Weeks','Bottom Weeks'])
 
 
 # init
